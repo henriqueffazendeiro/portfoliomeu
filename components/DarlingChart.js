@@ -41,21 +41,20 @@ export default function DarlingChart() {
       console.warn('⚠️ Darling: Using example data');
       console.error(err);
       
-      // Fallback with example data (12 months)
+      // Fallback with example data (11 months - excluding Jul from last year)
       setData({
         monthly_data: [
+          { month: 'Aug', revenue: 412 },
+          { month: 'Sep', revenue: 385 },
+          { month: 'Oct', revenue: 456 },
+          { month: 'Nov', revenue: 521 },
+          { month: 'Dec', revenue: 489 },
           { month: 'Jan', revenue: 98 },
           { month: 'Feb', revenue: 123 },
           { month: 'Mar', revenue: 156 },
           { month: 'Apr', revenue: 234 },
           { month: 'May', revenue: 189 },
-          { month: 'Jun', revenue: 298 },
-          { month: 'Jul', revenue: 367 },
-          { month: 'Aug', revenue: 412 },
-          { month: 'Sep', revenue: 385 },
-          { month: 'Oct', revenue: 456 },
-          { month: 'Nov', revenue: 521 },
-          { month: 'Dec', revenue: 489 }
+          { month: 'Jun', revenue: 298 }
         ],
         current_month_revenue: 412,
         total_revenue: 1656
@@ -101,17 +100,8 @@ export default function DarlingChart() {
   const createSVGChart = () => {
     if (!data?.monthly_data?.length) return null;
 
-    // Use all 12 months data
-    const allMonthlyData = data.monthly_data;
-    const startIndex = currentMonthIndex;
-    const endIndex = Math.min(startIndex + 11, allMonthlyData.length);
-    const monthlyData = allMonthlyData.slice(startIndex, endIndex);
-    
-    // If we don't have enough data, pad with previous months
-    if (monthlyData.length < 11 && startIndex > 0) {
-      const additionalMonths = allMonthlyData.slice(Math.max(0, startIndex - (11 - monthlyData.length)), startIndex);
-      monthlyData.unshift(...additionalMonths);
-    }
+    // Use all 11 months data (current month + 10 previous months)
+    const monthlyData = data.monthly_data;
     
     const maxRevenue = Math.max(...monthlyData.map(d => d.revenue));
     
