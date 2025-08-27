@@ -233,8 +233,8 @@ export default function DarlingChart() {
             height="65"
             fill="transparent"
             onMouseMove={(e) => {
-              const svgRect = e.currentTarget.closest('svg').getBoundingClientRect();
-              const mouseX = e.clientX - svgRect.left;
+              const rect = e.currentTarget.getBoundingClientRect();
+              const mouseX = e.clientX - rect.left + 30; // Adjust for chart offset
               const closestIndex = findClosestPoint(mouseX, points);
               
               setIsHovering(true);
