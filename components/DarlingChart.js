@@ -5,9 +5,6 @@ export default function DarlingChart() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [hoveredPoint, setHoveredPoint] = useState(null);
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-  const [currentMonthIndex, setCurrentMonthIndex] = useState(0);
-  const [isTransitioning, setIsTransitioning] = useState(false);
   const [isHovering, setIsHovering] = useState(false);
 
   useEffect(() => {
@@ -66,12 +63,9 @@ export default function DarlingChart() {
     }
   };
 
-  const handleMouseMove = (event, svgRect, points) => {
-    if (!svgRect || !points) return;
+  const findClosestPoint = (mouseX, points) => {
+    if (!points || points.length === 0) return 0;
     
-    const mouseX = event.clientX - svgRect.left;
-    
-    // Find the closest point to mouse position
     let closestIndex = 0;
     let minDistance = Math.abs(points[0].x - mouseX);
     
@@ -81,17 +75,6 @@ export default function DarlingChart() {
         minDistance = distance;
         closestIndex = i;
       }
-    }
-    
-    setMousePosition({ x: mouseX, y: event.clientY - svgRect.top });
-    
-    // Smooth transition to new month if different
-    if (closestIndex !== currentMonthIndex && !isTransitioning) {
-      setIsTransitioning(true);
-      setTimeout(() => {
-        setCurrentMonthIndex(closestIndex);
-        setTimeout(() => setIsTransitioning(false), 150);
-      }, 50);
     }
     
     return closestIndex;
@@ -251,13 +234,11 @@ export default function DarlingChart() {
             fill="transparent"
             onMouseMove={(e) => {
               const svgRect = e.currentTarget.closest('svg').getBoundingClientRect();
-              const closestIndex = handleMouseMove(e, svgRect, points);
-              setIsHovering(true);
+              const mouseX = e.clientX - svgRect.left;
+              const closestIndex = findClosestPoint(mouseX, points);
               
-              // Set hovered point to the closest one
-              if (closestIndex !== undefined) {
-                setHoveredPoint({ ...points[closestIndex].data, index: closestIndex });
-              }
+              setIsHovering(true);
+              setHoveredPoint({ ...points[closestIndex].data, index: closestIndex });
             }}
             onMouseLeave={() => {
               setHoveredPoint(null);
