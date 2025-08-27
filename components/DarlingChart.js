@@ -41,9 +41,10 @@ export default function DarlingChart() {
       console.warn('⚠️ Darling: Using example data');
       console.error(err);
       
-      // Fallback with example data (11 months)
+      // Fallback with example data (12 months)
       setData({
         monthly_data: [
+          { month: 'Jan', revenue: 98 },
           { month: 'Feb', revenue: 123 },
           { month: 'Mar', revenue: 156 },
           { month: 'Apr', revenue: 234 },
@@ -100,8 +101,8 @@ export default function DarlingChart() {
   const createSVGChart = () => {
     if (!data?.monthly_data?.length) return null;
 
-    // Remove first month to show only 11 months, then slice based on current month
-    const allMonthlyData = data.monthly_data.slice(1);
+    // Use all 12 months data
+    const allMonthlyData = data.monthly_data;
     const startIndex = currentMonthIndex;
     const endIndex = Math.min(startIndex + 11, allMonthlyData.length);
     const monthlyData = allMonthlyData.slice(startIndex, endIndex);
