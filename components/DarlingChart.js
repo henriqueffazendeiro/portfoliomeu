@@ -141,27 +141,7 @@ export default function DarlingChart() {
 
     return (
       <div className="chart-container">
-        <div className="chart-navigation">
-          <button 
-            onClick={() => changeMonth('prev')} 
-            disabled={currentMonthIndex === 0 || isTransitioning}
-            className="nav-button prev-button"
-          >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
-            </svg>
-          </button>
-          <button 
-            onClick={() => changeMonth('next')} 
-            disabled={currentMonthIndex >= 11 || isTransitioning}
-            className="nav-button next-button"
-          >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/>
-            </svg>
-          </button>
-        </div>
-        <svg width="100%" height="100%" viewBox="0 0 400 90" className={`revenue-chart ${isTransitioning ? 'transitioning' : ''}`}>
+        <svg width="100%" height="100%" viewBox="0 0 400 90" className="revenue-chart">
           <defs>
             <linearGradient id="darling-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
               <stop offset="0%" stopColor="#1e40af" stopOpacity={0.2} />
@@ -367,7 +347,7 @@ export default function DarlingChart() {
           transition: all 0.3s ease;
           cursor: pointer;
           min-height: 160px;
-          width: 110%;
+          width: 100%;
           box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
         }
 
@@ -485,52 +465,9 @@ export default function DarlingChart() {
 
         .chart-container {
           margin-top: 12px;
-          height: 120px;
+          height: 90px;
           width: 100%;
           position: relative;
-        }
-
-        .chart-navigation {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          margin-bottom: 8px;
-          padding: 0 10px;
-        }
-
-        .nav-button {
-          background: #f1f5f9;
-          border: none;
-          border-radius: 6px;
-          width: 32px;
-          height: 24px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          cursor: pointer;
-          color: #64748b;
-          transition: all 0.2s ease;
-        }
-
-        .nav-button:hover:not(:disabled) {
-          background: #e2e8f0;
-          color: #1e40af;
-          transform: scale(1.05);
-        }
-
-        .nav-button:disabled {
-          opacity: 0.4;
-          cursor: not-allowed;
-        }
-
-        .revenue-chart {
-          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-          transform-origin: center;
-        }
-
-        .revenue-chart.transitioning {
-          opacity: 0.7;
-          transform: scale(0.98);
         }
 
         .revenue-chart .chart-dot {
