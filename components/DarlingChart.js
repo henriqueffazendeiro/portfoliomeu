@@ -8,6 +8,7 @@ export default function DarlingChart() {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [currentMonthIndex, setCurrentMonthIndex] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
+  const [isHovering, setIsHovering] = useState(false);
 
   useEffect(() => {
     fetchData();
@@ -65,25 +66,27 @@ export default function DarlingChart() {
     }
   };
 
-  const changeMonth = (direction) => {
-    if (isTransitioning) return;
+  const handleMouseMove = (event, svgRect) => {
+    if (!svgRect) return;
     
-    setIsTransitioning(true);
+    const mouseX = event.clientX - svgRect.left;
+    const chartWidth = svgRect.width;
+    const relativeX = mouseX / chartWidth;
     
-    setTimeout(() => {
-      setCurrentMonthIndex(prev => {
-        if (direction === 'next' && prev < 11) {
-          return prev + 1;
-        } else if (direction === 'prev' && prev > 0) {
-          return prev - 1;
-        }
-        return prev;
-      });
-      
+    // Calculate which month should be highlighted based on mouse position
+    const monthIndex = Math.round(relativeX * 10); // 0-10 for 11 months
+    const clampedIndex = Math.max(0, Math.min(10, monthIndex));
+    
+    setMousePosition({ x: mouseX, y: event.clientY - svgRect.top });
+    
+    // Smooth transition to new month
+    if (clampedIndex !== currentMonthIndex && !isTransitioning) {
+      setIsTransitioning(true);
       setTimeout(() => {
-        setIsTransitioning(false);
-      }, 200);
-    }, 150);
+        setCurrentMonthIndex(clampedIndex);
+        setTimeout(() => setIsTransitioning(false), 150);
+      }, 50);
+    }
   };
 
   const createSVGChart = () => {
@@ -240,22 +243,33 @@ export default function DarlingChart() {
             </g>
           )}
           
-          {/* Hover areas for each point */}
-          {points.map((point, i) => (
-            <rect
-              key={`hover-${i}`}
-              x={point.x - 15}
-              y="10"
-              width="30"
-              height="65"
-              fill="transparent"
-              onMouseEnter={() => {
-                setHoveredPoint({ ...point.data, index: i });
-              }}
-              onMouseLeave={() => setHoveredPoint(null)}
-              style={{ cursor: 'pointer' }}
-            />
-          ))}
+          {/* Chart hover area */}
+          <rect
+            x="30"
+            y="10"
+            width="365"
+            height="65"
+            fill="transparent"
+            onMouseMove={(e) => {
+              const svgRect = e.currentTarget.closest('svg').getBoundingClientRect();
+              handleMouseMove(e, svgRect);
+              setIsHovering(true);
+              
+              // Find closest point for tooltip
+              const mouseX = e.clientX - svgRect.left;
+              const closestPointIndex = points.reduce((closest, point, index) => {
+                const distance = Math.abs(point.x - mouseX);
+                return distance < Math.abs(points[closest].x - mouseX) ? index : closest;
+              }, 0);
+              
+              setHoveredPoint({ ...points[closestPointIndex].data, index: closestPointIndex });
+            }}
+            onMouseLeave={() => {
+              setHoveredPoint(null);
+              setIsHovering(false);
+            }}
+            style={{ cursor: 'pointer' }}
+          />
           
           {/* Month labels */}
           {points.map((point, i) => (
@@ -472,6 +486,14 @@ export default function DarlingChart() {
 
         .revenue-chart .chart-dot {
           transition: r 0.2s ease;
+        }
+
+        .revenue-chart {
+          transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .revenue-chart.transitioning {
+          transition: all 0.15s ease-out;
         }
 
         .revenue-chart .chart-dot:hover {
