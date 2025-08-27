@@ -66,27 +66,35 @@ export default function DarlingChart() {
     }
   };
 
-  const handleMouseMove = (event, svgRect) => {
-    if (!svgRect) return;
+  const handleMouseMove = (event, svgRect, points) => {
+    if (!svgRect || !points) return;
     
     const mouseX = event.clientX - svgRect.left;
-    const chartWidth = svgRect.width;
-    const relativeX = mouseX / chartWidth;
     
-    // Calculate which month should be highlighted based on mouse position
-    const monthIndex = Math.round(relativeX * 10); // 0-10 for 11 months
-    const clampedIndex = Math.max(0, Math.min(10, monthIndex));
+    // Find the closest point to mouse position
+    let closestIndex = 0;
+    let minDistance = Math.abs(points[0].x - mouseX);
+    
+    for (let i = 1; i < points.length; i++) {
+      const distance = Math.abs(points[i].x - mouseX);
+      if (distance < minDistance) {
+        minDistance = distance;
+        closestIndex = i;
+      }
+    }
     
     setMousePosition({ x: mouseX, y: event.clientY - svgRect.top });
     
-    // Smooth transition to new month
-    if (clampedIndex !== currentMonthIndex && !isTransitioning) {
+    // Smooth transition to new month if different
+    if (closestIndex !== currentMonthIndex && !isTransitioning) {
       setIsTransitioning(true);
       setTimeout(() => {
-        setCurrentMonthIndex(clampedIndex);
+        setCurrentMonthIndex(closestIndex);
         setTimeout(() => setIsTransitioning(false), 150);
       }, 50);
     }
+    
+    return closestIndex;
   };
 
   const createSVGChart = () => {
@@ -252,17 +260,13 @@ export default function DarlingChart() {
             fill="transparent"
             onMouseMove={(e) => {
               const svgRect = e.currentTarget.closest('svg').getBoundingClientRect();
-              handleMouseMove(e, svgRect);
+              const closestIndex = handleMouseMove(e, svgRect, points);
               setIsHovering(true);
               
-              // Find closest point for tooltip
-              const mouseX = e.clientX - svgRect.left;
-              const closestPointIndex = points.reduce((closest, point, index) => {
-                const distance = Math.abs(point.x - mouseX);
-                return distance < Math.abs(points[closest].x - mouseX) ? index : closest;
-              }, 0);
-              
-              setHoveredPoint({ ...points[closestPointIndex].data, index: closestPointIndex });
+              // Set hovered point to the closest one
+              if (closestIndex !== undefined) {
+                setHoveredPoint({ ...points[closestIndex].data, index: closestIndex });
+              }
             }}
             onMouseLeave={() => {
               setHoveredPoint(null);
