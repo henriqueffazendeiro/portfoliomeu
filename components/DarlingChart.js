@@ -141,26 +141,6 @@ export default function DarlingChart() {
 
     return (
       <div className="chart-container">
-        <div className="chart-navigation">
-          <button 
-            onClick={() => changeMonth('prev')} 
-            disabled={currentMonthIndex === 0 || isTransitioning}
-            className="nav-button prev-button"
-          >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
-            </svg>
-          </button>
-          <button 
-            onClick={() => changeMonth('next')} 
-            disabled={currentMonthIndex >= 11 || isTransitioning}
-            className="nav-button next-button"
-          >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/>
-            </svg>
-          </button>
-        </div>
         <svg width="100%" height="100%" viewBox="0 0 400 90" className={`revenue-chart ${isTransitioning ? 'transitioning' : ''}`}>
           <defs>
             <linearGradient id="darling-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
@@ -359,8 +339,8 @@ export default function DarlingChart() {
       
       <style jsx>{`
         .darling-card {
-          background: #ffffff;
-          border: none;
+          background-color: rgba(30, 41, 59, 0.8);
+          border: 1px solid rgba(71, 85, 105, 0.3);
           border-radius: 12px;
           padding: 20px 20px 8px 20px;
           text-align: left;
@@ -368,7 +348,8 @@ export default function DarlingChart() {
           cursor: pointer;
           min-height: 160px;
           width: 110%;
-          box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
+          box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+          backdrop-filter: blur(10px);
         }
 
 
@@ -405,7 +386,7 @@ export default function DarlingChart() {
           padding: 0;
           display: flex;
           align-items: center;
-          color: #64748b !important;
+          color: #cbd5e1 !important;
           font-size: 11px;
           font-weight: 500;
           margin: 0;
@@ -437,24 +418,24 @@ export default function DarlingChart() {
           flex: 1;
           justify-content: flex-start;
           font-family: 'Rubik', sans-serif;
-          color: #000000 !important;
+          color: #f8fafc !important;
         }
 
         .revenue-symbol {
           opacity: 1;
-          color: #000000;
+          color: #f8fafc;
           font-weight: 400;
         }
 
         .revenue-amount {
           font-weight: 400;
-          color: #000000;
+          color: #f8fafc;
         }
 
         .revenue-period {
           opacity: 1;
           font-weight: 400;
-          color: #000000;
+          color: #f8fafc;
         }
 
         .card-content {
@@ -468,7 +449,7 @@ export default function DarlingChart() {
           font-size: 18px;
           font-weight: 600;
           margin: 0;
-          color: #1e293b;
+          color: #f8fafc;
           line-height: 1;
           display: flex;
           align-items: center;
@@ -476,7 +457,7 @@ export default function DarlingChart() {
 
         .project-description {
           font-size: 14px;
-          color: #000000;
+          color: #f8fafc;
           line-height: 1.4;
           margin: -2px 0 0 0;
           font-family: 'Rubik', sans-serif;
@@ -490,38 +471,6 @@ export default function DarlingChart() {
           position: relative;
         }
 
-        .chart-navigation {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          margin-bottom: 8px;
-          padding: 0 10px;
-        }
-
-        .nav-button {
-          background: #f1f5f9;
-          border: none;
-          border-radius: 6px;
-          width: 32px;
-          height: 24px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          cursor: pointer;
-          color: #64748b;
-          transition: all 0.2s ease;
-        }
-
-        .nav-button:hover:not(:disabled) {
-          background: #e2e8f0;
-          color: #1e40af;
-          transform: scale(1.05);
-        }
-
-        .nav-button:disabled {
-          opacity: 0.4;
-          cursor: not-allowed;
-        }
 
         .revenue-chart {
           transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -565,7 +514,7 @@ export default function DarlingChart() {
 
         .error-notice {
           font-size: 11px;
-          color: #64748b;
+          color: #cbd5e1;
           text-align: center;
           margin-top: 4px;
         }
