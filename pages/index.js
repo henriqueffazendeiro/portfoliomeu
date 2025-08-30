@@ -154,6 +154,8 @@ export default function Home() {
       <div className="container">
         <div className="profile-section">
           <div className="profile-background-box">
+            <div className="glass-edge"></div>
+            <div className="chromatic-aberration"></div>
             <div className="profile-content">
               <div className="profile-image">
                 <img src="https://via.placeholder.com/150" alt="Foto de perfil" id="profile-img" />
@@ -265,20 +267,126 @@ export default function Home() {
         }
 
         .profile-background-box {
-          background-color: rgba(30, 41, 59, 0.8);
-          border: 1px solid rgba(71, 85, 105, 0.3);
-          border-radius: 16px;
-          padding: 40px;
-          box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-          backdrop-filter: blur(10px);
+          position: relative;
           max-width: 380px;
           width: 100%;
+          padding: 40px;
+          border-radius: 24px;
+          overflow: hidden;
+          
+          /* Multi-layer glass effect */
+          background: 
+            linear-gradient(135deg, 
+              rgba(255, 255, 255, 0.01) 0%, 
+              rgba(255, 255, 255, 0.05) 50%, 
+              rgba(255, 255, 255, 0.01) 100%),
+            linear-gradient(to bottom, 
+              rgba(255, 255, 255, 0.03) 0%, 
+              transparent 20%, 
+              transparent 80%, 
+              rgba(255, 255, 255, 0.03) 100%),
+            rgba(255, 255, 255, 0.02);
+          
+          /* Ultra realistic blur */
+          backdrop-filter: blur(40px) saturate(150%);
+          -webkit-backdrop-filter: blur(40px) saturate(150%);
+          
+          /* Complex border for glass edge effect */
+          border: 1px solid transparent;
+          background-clip: padding-box;
+          
+          /* Realistic glass shadows and lighting */
+          box-shadow: 
+            /* Main shadow */
+            0 25px 50px -12px rgba(0, 0, 0, 0.7),
+            /* Ambient shadow */
+            0 10px 30px rgba(0, 0, 0, 0.4),
+            /* Inner light reflection top */
+            inset 0 2px 2px rgba(255, 255, 255, 0.2),
+            /* Inner shadow bottom */
+            inset 0 -2px 2px rgba(0, 0, 0, 0.2),
+            /* Glass edge highlight */
+            inset 0 0 0 1px rgba(255, 255, 255, 0.1),
+            /* Outer glow */
+            0 0 100px rgba(49, 99, 223, 0.15);
+        }
+
+        /* Top edge highlight for realism */
+        .profile-background-box::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 10%;
+          right: 10%;
+          height: 1px;
+          background: linear-gradient(90deg, 
+            transparent, 
+            rgba(255, 255, 255, 0.5) 50%, 
+            transparent);
+          opacity: 0.6;
+        }
+
+        /* Bottom edge shadow for depth */
+        .profile-background-box::after {
+          content: '';
+          position: absolute;
+          bottom: 0;
+          left: 10%;
+          right: 10%;
+          height: 1px;
+          background: linear-gradient(90deg, 
+            transparent, 
+            rgba(0, 0, 0, 0.3) 50%, 
+            transparent);
+          opacity: 0.4;
+        }
+
+        /* Glass refraction effect on edges */
+        .glass-edge {
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          border-radius: 24px;
+          padding: 2px;
+          background: linear-gradient(135deg, 
+            rgba(255, 255, 255, 0.15) 0%, 
+            transparent 30%, 
+            transparent 70%, 
+            rgba(255, 255, 255, 0.15) 100%);
+          -webkit-mask: 
+            linear-gradient(#fff 0 0) content-box, 
+            linear-gradient(#fff 0 0);
+          -webkit-mask-composite: xor;
+          mask-composite: exclude;
+          pointer-events: none;
+        }
+
+        /* Chromatic aberration effect for ultra realism */
+        .chromatic-aberration {
+          position: absolute;
+          top: -1px;
+          left: -1px;
+          right: -1px;
+          bottom: -1px;
+          border-radius: 24px;
+          border: 1px solid transparent;
+          background: linear-gradient(90deg, 
+            rgba(255, 0, 0, 0.03), 
+            rgba(0, 255, 0, 0.03), 
+            rgba(0, 0, 255, 0.03));
+          opacity: 0.5;
+          pointer-events: none;
+          mix-blend-mode: screen;
         }
 
         .profile-content {
           text-align: center;
           max-width: 300px;
           margin: 0 auto;
+          position: relative;
+          z-index: 1;
         }
 
         .profile-image {
