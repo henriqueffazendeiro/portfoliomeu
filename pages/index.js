@@ -49,6 +49,11 @@ export default function Home() {
           
           const distanceFromCenter = Math.hypot(pixelX - centerX, pixelY - centerY);
           
+          // Calculate fade factor based on distance from glow zone
+          const distanceFromGlow = Math.max(0, glowZoneStart - pixelY);
+          const fadeDistance = 150; // Distance over which pixels fade
+          const fadeFactor = Math.min(1, distanceFromGlow / fadeDistance);
+          
           pixels.push({
             x: pixelX,
             y: pixelY,
@@ -58,7 +63,8 @@ export default function Home() {
             speed: 0.02 + Math.random() * 0.03,
             entryDelay: (distanceFromCenter / maxDistance) * 1000,
             hasEntered: false,
-            timeOffset: Math.random() * Math.PI * 2
+            timeOffset: Math.random() * Math.PI * 2,
+            fadeFactor: fadeFactor
           });
         }
       }
@@ -115,7 +121,7 @@ export default function Home() {
           pixel.opacity += (pixel.targetOpacity - pixel.opacity) * 0.1;
           
           if (pixel.opacity > 0.01) {
-            const intensity = pixel.opacity;
+            const intensity = pixel.opacity * pixel.fadeFactor;
             ctx.fillStyle = `rgba(49, 99, 223, ${intensity})`;
             
             ctx.fillRect(pixel.x, pixel.y, PIXEL_SIZE, PIXEL_SIZE);
@@ -127,8 +133,9 @@ export default function Home() {
               ctx.shadowBlur = 0;
             }
           } else if (pixel.hasEntered) {
-            // Draw dim pixels when not active
-            ctx.fillStyle = `rgba(49, 99, 223, 0.04)`;
+            // Draw dim pixels when not active, faded based on glow proximity
+            const dimOpacity = 0.04 * pixel.fadeFactor;
+            ctx.fillStyle = `rgba(49, 99, 223, ${dimOpacity})`;
             ctx.fillRect(pixel.x, pixel.y, PIXEL_SIZE, PIXEL_SIZE);
           }
         }
