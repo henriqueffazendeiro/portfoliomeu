@@ -299,7 +299,7 @@ export default function Home() {
             /* Glass edge highlight */
             inset 0 0 0 1px rgba(255, 255, 255, 0.1),
             /* Outer glow */
-            0 0 100px rgba(49, 99, 223, 0.15);
+            0 0 100px rgba(49, 99, 223, 0.05);
         }
 
         /* Top edge highlight for realism */
