@@ -261,7 +261,7 @@ export default function Home() {
 
         .profile-section {
           background-color: transparent;
-          padding: 40px;
+          padding: 15px;
           display: flex;
           align-items: center;
           justify-content: center;
@@ -433,7 +433,7 @@ export default function Home() {
 
         .projects-section {
           background-color: transparent;
-          padding: 60px 40px;
+          padding: 15px;
           display: flex;
           align-items: center;
           justify-content: center;
@@ -506,7 +506,7 @@ export default function Home() {
 
         .right-section {
           background-color: transparent;
-          padding: 40px;
+          padding: 15px;
           display: flex;
           align-items: center;
           justify-content: center;
