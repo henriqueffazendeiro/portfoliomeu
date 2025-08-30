@@ -56,8 +56,8 @@ export default function Home() {
       animationStartTime = Date.now();
     }
     
-    const MIN_ACTIVE_PIXELS = 15;
-    const MAX_ACTIVE_PIXELS = 40;
+    const MIN_ACTIVE_PIXELS = 60;
+    const MAX_ACTIVE_PIXELS = 120;
     let targetActivePixels = MIN_ACTIVE_PIXELS + Math.random() * (MAX_ACTIVE_PIXELS - MIN_ACTIVE_PIXELS);
     
     function animate() {
