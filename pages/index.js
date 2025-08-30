@@ -131,7 +131,7 @@ export default function Home() {
 
         body {
           font-family: 'Rubik', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-          background-color: #0f172a;
+          background-color: #000001;
           color: #e2e8f0;
           line-height: 1.6;
           position: relative;
