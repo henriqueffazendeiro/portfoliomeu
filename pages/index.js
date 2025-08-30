@@ -4,10 +4,17 @@ import { useEffect } from 'react';
 
 export default function Home() {
   useEffect(() => {
-    // Load Twitter widgets
-    if (window.twttr && window.twttr.widgets) {
-      window.twttr.widgets.load();
-    }
+    // Load Twitter widgets after component mounts
+    const loadTwitterWidget = () => {
+      if (window.twttr && window.twttr.widgets) {
+        window.twttr.widgets.load();
+      } else {
+        // If Twitter script hasn't loaded yet, wait and try again
+        setTimeout(loadTwitterWidget, 1000);
+      }
+    };
+    
+    loadTwitterWidget();
 
     const canvas = document.getElementById('pixelCanvas');
     if (!canvas) return;
