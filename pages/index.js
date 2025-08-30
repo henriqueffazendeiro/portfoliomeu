@@ -136,8 +136,8 @@ export default function Home() {
               ctx.fillRect(pixel.x, pixel.y, PIXEL_SIZE, PIXEL_SIZE);
               ctx.shadowBlur = 0;
             }
-          } else if (pixel.hasEntered) {
-            // Draw dim pixels when not active, faded based on glow proximity
+          } else if (pixel.hasEntered && pixel.fadeFactor > 0.1) {
+            // Draw dim pixels when not active, only if not too close to glow zone
             const dimOpacity = 0.04 * pixel.fadeFactor;
             ctx.fillStyle = `rgba(49, 99, 223, ${dimOpacity})`;
             ctx.fillRect(pixel.x, pixel.y, PIXEL_SIZE, PIXEL_SIZE);
