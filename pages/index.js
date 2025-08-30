@@ -443,8 +443,11 @@ export default function Home() {
           flex-direction: column;
           gap: 20px;
           width: 100%;
+          max-width: 400px;
           margin: 0 auto;
           padding: 0 20px;
+          align-items: center;
+          justify-content: center;
         }
 
         .project-card {
@@ -459,7 +462,8 @@ export default function Home() {
           flex-direction: column;
           gap: 8px;
           min-height: 160px;
-          width: 110%;
+          width: 100%;
+          max-width: 350px;
           box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
           backdrop-filter: blur(10px);
         }
