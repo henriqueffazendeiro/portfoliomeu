@@ -42,17 +42,24 @@ export default function Home() {
           const pixelX = x * CELL_SIZE;
           const pixelY = y * CELL_SIZE;
           
-          // Skip pixels that are in the bottom glow zone
-          if (pixelY > glowZoneStart) {
-            continue;
-          }
-          
           const distanceFromCenter = Math.hypot(pixelX - centerX, pixelY - centerY);
           
           // Calculate fade factor based on distance from glow zone
-          const distanceFromGlow = Math.max(0, glowZoneStart - pixelY);
-          const fadeDistance = 150; // Distance over which pixels fade
-          const fadeFactor = Math.min(1, distanceFromGlow / fadeDistance);
+          let fadeFactor = 1;
+          if (pixelY > glowZoneStart - 150) {
+            // Pixels within 150px above glow zone start fading
+            if (pixelY <= glowZoneStart) {
+              // Above glow zone - fade based on proximity
+              const distanceFromGlow = glowZoneStart - pixelY;
+              const fadeDistance = 150;
+              fadeFactor = Math.min(1, distanceFromGlow / fadeDistance);
+            } else {
+              // Inside glow zone - fade based on depth into glow
+              const depthIntoGlow = pixelY - glowZoneStart;
+              const glowIntensity = depthIntoGlow / glowZoneHeight;
+              fadeFactor = Math.max(0.02, 1 - glowIntensity * 0.95); // Minimum 2% visibility
+            }
+          }
           
           pixels.push({
             x: pixelX,
