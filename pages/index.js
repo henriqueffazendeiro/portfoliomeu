@@ -20,7 +20,10 @@ export default function Home() {
           pixel.className = 'pixel';
           pixel.style.left = (col * pixelSize - 1) + 'px';
           pixel.style.top = (row * pixelSize - 1) + 'px';
-          // Remover efeito de onda - sem animationDelay baseado em posição
+          // Timing aleatório para cada pixel (0 a 8 segundos de delay)
+          pixel.style.animationDelay = (Math.random() * 8) + 's';
+          // Duração aleatória para mais variedade (6 a 10 segundos)
+          pixel.style.animationDuration = (6 + Math.random() * 4) + 's';
           pixel.style.zIndex = '10';
           pixelBg.appendChild(pixel);
         }
@@ -118,14 +121,16 @@ export default function Home() {
           box-sizing: border-box;
         }
 
-        @keyframes shimmer {
-          0%, 100% {
-            opacity: 0.3;
+        @keyframes pixelFlash {
+          0%, 90%, 100% {
+            background-color: rgba(148, 163, 184, 0.6);
+            box-shadow: none;
             transform: scale(1);
           }
-          50% {
-            opacity: 0.8;
-            transform: scale(1.2);
+          5%, 85% {
+            background-color: #3163df;
+            box-shadow: 0 0 8px #3163df, 0 0 16px #3163df;
+            transform: scale(1.3);
           }
         }
 
@@ -154,19 +159,8 @@ export default function Home() {
           height: 2px;
           background-color: rgba(148, 163, 184, 0.6);
           border-radius: 0.5px;
-          animation: shimmer 4s ease-in-out infinite;
-        }
-
-        .pixel:nth-child(4n) {
-          background-color: rgba(203, 213, 225, 0.7);
-        }
-
-        .pixel:nth-child(8n) {
-          background-color: rgba(241, 245, 249, 0.6);
-        }
-
-        .pixel:nth-child(12n) {
-          background-color: rgba(100, 116, 139, 0.9);
+          animation: pixelFlash 8s ease-in-out infinite;
+          transition: all 0.3s ease;
         }
 
         .container {
