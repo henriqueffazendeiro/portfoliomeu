@@ -1,7 +1,12 @@
 {
+  "buildCommand": "npm run build",
+  "outputDirectory": ".next",
+  "devCommand": "npm run dev",
+  "installCommand": "npm install",
+  "framework": "nextjs",
   "functions": {
     "pages/api/**/*.js": {
-      "runtime": "@vercel/node@3.0.23"
+      "runtime": "nodejs18.x"
     }
   }
 }

@@ -5,7 +5,9 @@ export default function DarlingChart() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [hoveredPoint, setHoveredPoint] = useState(null);
-  const [isHovering, setIsHovering] = useState(false);
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [currentMonthIndex, setCurrentMonthIndex] = useState(0);
+  const [isTransitioning, setIsTransitioning] = useState(false);
 
   useEffect(() => {
     fetchData();
@@ -38,20 +40,20 @@ export default function DarlingChart() {
       console.warn('⚠️ Darling: Using example data');
       console.error(err);
       
-      // Fallback with example data (11 months - excluding Jul from last year)
+      // Fallback with example data (11 months)
       setData({
         monthly_data: [
-          { month: 'Aug', revenue: 412 },
-          { month: 'Sep', revenue: 385 },
-          { month: 'Oct', revenue: 456 },
-          { month: 'Nov', revenue: 521 },
-          { month: 'Dec', revenue: 489 },
-          { month: 'Jan', revenue: 98 },
           { month: 'Feb', revenue: 123 },
           { month: 'Mar', revenue: 156 },
           { month: 'Apr', revenue: 234 },
           { month: 'May', revenue: 189 },
-          { month: 'Jun', revenue: 298 }
+          { month: 'Jun', revenue: 298 },
+          { month: 'Jul', revenue: 367 },
+          { month: 'Aug', revenue: 412 },
+          { month: 'Sep', revenue: 385 },
+          { month: 'Oct', revenue: 456 },
+          { month: 'Nov', revenue: 521 },
+          { month: 'Dec', revenue: 489 }
         ],
         current_month_revenue: 412,
         total_revenue: 1656
@@ -63,28 +65,41 @@ export default function DarlingChart() {
     }
   };
 
-  const findClosestPoint = (mouseX, points) => {
-    if (!points || points.length === 0) return 0;
+  const changeMonth = (direction) => {
+    if (isTransitioning) return;
     
-    let closestIndex = 0;
-    let minDistance = Math.abs(points[0].x - mouseX);
+    setIsTransitioning(true);
     
-    for (let i = 1; i < points.length; i++) {
-      const distance = Math.abs(points[i].x - mouseX);
-      if (distance < minDistance) {
-        minDistance = distance;
-        closestIndex = i;
-      }
-    }
-    
-    return closestIndex;
+    setTimeout(() => {
+      setCurrentMonthIndex(prev => {
+        if (direction === 'next' && prev < 11) {
+          return prev + 1;
+        } else if (direction === 'prev' && prev > 0) {
+          return prev - 1;
+        }
+        return prev;
+      });
+      
+      setTimeout(() => {
+        setIsTransitioning(false);
+      }, 200);
+    }, 150);
   };
 
   const createSVGChart = () => {
     if (!data?.monthly_data?.length) return null;
 
-    // Use all 11 months data (current month + 10 previous months)
-    const monthlyData = data.monthly_data;
+    // Remove first month to show only 11 months, then slice based on current month
+    const allMonthlyData = data.monthly_data.slice(1);
+    const startIndex = currentMonthIndex;
+    const endIndex = Math.min(startIndex + 11, allMonthlyData.length);
+    const monthlyData = allMonthlyData.slice(startIndex, endIndex);
+    
+    // If we don't have enough data, pad with previous months
+    if (monthlyData.length < 11 && startIndex > 0) {
+      const additionalMonths = allMonthlyData.slice(Math.max(0, startIndex - (11 - monthlyData.length)), startIndex);
+      monthlyData.unshift(...additionalMonths);
+    }
     
     const maxRevenue = Math.max(...monthlyData.map(d => d.revenue));
     
@@ -126,7 +141,27 @@ export default function DarlingChart() {
 
     return (
       <div className="chart-container">
-        <svg width="100%" height="100%" viewBox="0 0 400 90" className="revenue-chart">
+        <div className="chart-navigation">
+          <button 
+            onClick={() => changeMonth('prev')} 
+            disabled={currentMonthIndex === 0 || isTransitioning}
+            className="nav-button prev-button"
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
+            </svg>
+          </button>
+          <button 
+            onClick={() => changeMonth('next')} 
+            disabled={currentMonthIndex >= 11 || isTransitioning}
+            className="nav-button next-button"
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/>
+            </svg>
+          </button>
+        </div>
+        <svg width="100%" height="100%" viewBox="0 0 400 90" className={`revenue-chart ${isTransitioning ? 'transitioning' : ''}`}>
           <defs>
             <linearGradient id="darling-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
               <stop offset="0%" stopColor="#1e40af" stopOpacity={0.2} />
@@ -225,27 +260,22 @@ export default function DarlingChart() {
             </g>
           )}
           
-          {/* Chart hover area */}
-          <rect
-            x="30"
-            y="10"
-            width="365"
-            height="65"
-            fill="transparent"
-            onMouseMove={(e) => {
-              const rect = e.currentTarget.getBoundingClientRect();
-              const mouseX = e.clientX - rect.left + 30; // Adjust for chart offset
-              const closestIndex = findClosestPoint(mouseX, points);
-              
-              setIsHovering(true);
-              setHoveredPoint({ ...points[closestIndex].data, index: closestIndex });
-            }}
-            onMouseLeave={() => {
-              setHoveredPoint(null);
-              setIsHovering(false);
-            }}
-            style={{ cursor: 'pointer' }}
-          />
+          {/* Hover areas for each point */}
+          {points.map((point, i) => (
+            <rect
+              key={`hover-${i}`}
+              x={point.x - 15}
+              y="10"
+              width="30"
+              height="65"
+              fill="transparent"
+              onMouseEnter={() => {
+                setHoveredPoint({ ...point.data, index: i });
+              }}
+              onMouseLeave={() => setHoveredPoint(null)}
+              style={{ cursor: 'pointer' }}
+            />
+          ))}
           
           {/* Month labels */}
           {points.map((point, i) => (
@@ -337,7 +367,7 @@ export default function DarlingChart() {
           transition: all 0.3s ease;
           cursor: pointer;
           min-height: 160px;
-          width: 100%;
+          width: 110%;
           box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
         }
 
@@ -455,21 +485,56 @@ export default function DarlingChart() {
 
         .chart-container {
           margin-top: 12px;
-          height: 90px;
+          height: 120px;
           width: 100%;
           position: relative;
         }
 
-        .revenue-chart .chart-dot {
-          transition: r 0.2s ease;
+        .chart-navigation {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 8px;
+          padding: 0 10px;
+        }
+
+        .nav-button {
+          background: #f1f5f9;
+          border: none;
+          border-radius: 6px;
+          width: 32px;
+          height: 24px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          color: #64748b;
+          transition: all 0.2s ease;
+        }
+
+        .nav-button:hover:not(:disabled) {
+          background: #e2e8f0;
+          color: #1e40af;
+          transform: scale(1.05);
+        }
+
+        .nav-button:disabled {
+          opacity: 0.4;
+          cursor: not-allowed;
         }
 
         .revenue-chart {
-          transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+          transform-origin: center;
         }
 
         .revenue-chart.transitioning {
-          transition: all 0.15s ease-out;
+          opacity: 0.7;
+          transform: scale(0.98);
+        }
+
+        .revenue-chart .chart-dot {
+          transition: r 0.2s ease;
         }
 
         .revenue-chart .chart-dot:hover {

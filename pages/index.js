@@ -12,6 +12,8 @@ export default function Home() {
         <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
       </Head>
 
+      <div className="pixel-bg" id="pixel-bg"></div>
+      
       <div className="container">
         <div className="profile-section">
           <div className="profile-background-box">
@@ -78,11 +80,72 @@ export default function Home() {
           box-sizing: border-box;
         }
 
+        @keyframes shimmer {
+          0%, 100% {
+            opacity: 0.3;
+            transform: scale(1);
+          }
+          50% {
+            opacity: 0.8;
+            transform: scale(1.2);
+          }
+        }
+
         body {
           font-family: 'Rubik', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-          background-color: #f8fafc;
-          color: #1e293b;
+          background-color: #0f172a;
+          color: #e2e8f0;
           line-height: 1.6;
+          position: relative;
+          overflow-x: hidden;
+        }
+
+        body::before {
+          content: '';
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background: 
+            radial-gradient(circle at 20% 50%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+            radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+            radial-gradient(circle at 40% 80%, rgba(120, 119, 198, 0.2) 0%, transparent 50%);
+          z-index: 0;
+        }
+
+        .pixel-bg {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          pointer-events: none;
+          z-index: 1;
+        }
+
+        .pixel {
+          position: absolute;
+          width: 2px;
+          height: 2px;
+          background-color: rgba(148, 163, 184, 0.4);
+          border-radius: 50%;
+          animation: shimmer 3s ease-in-out infinite;
+        }
+
+        .pixel:nth-child(2n) {
+          animation-delay: -1s;
+          background-color: rgba(203, 213, 225, 0.3);
+        }
+
+        .pixel:nth-child(3n) {
+          animation-delay: -2s;
+          background-color: rgba(241, 245, 249, 0.2);
+        }
+
+        .pixel:nth-child(4n) {
+          animation-delay: -0.5s;
+          background-color: rgba(100, 116, 139, 0.4);
         }
 
         .container {
@@ -91,10 +154,12 @@ export default function Home() {
           grid-template-columns: 1fr 1fr 1fr;
           gap: 0;
           overflow: hidden;
+          position: relative;
+          z-index: 2;
         }
 
         .profile-section {
-          background-color: #f8fafc;
+          background-color: transparent;
           padding: 40px;
           display: flex;
           align-items: center;
@@ -103,10 +168,12 @@ export default function Home() {
         }
 
         .profile-background-box {
-          background-color: #ffffff;
+          background-color: rgba(30, 41, 59, 0.8);
+          border: 1px solid rgba(71, 85, 105, 0.3);
           border-radius: 16px;
           padding: 40px;
-          box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+          box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+          backdrop-filter: blur(10px);
           max-width: 380px;
           width: 100%;
         }
@@ -133,12 +200,12 @@ export default function Home() {
           font-size: 28px;
           font-weight: 600;
           margin-bottom: 12px;
-          color: #1e293b;
+          color: #f8fafc;
         }
 
         .intro-text {
           font-size: 18px;
-          color: #64748b;
+          color: #cbd5e1;
           margin-bottom: 32px;
           line-height: 1.5;
         }
@@ -156,20 +223,20 @@ export default function Home() {
           width: 44px;
           height: 44px;
           border-radius: 50%;
-          background-color: #f1f5f9;
-          color: #64748b;
+          background-color: rgba(71, 85, 105, 0.3);
+          color: #cbd5e1;
           text-decoration: none;
           transition: all 0.2s ease;
         }
 
         .social-link:hover {
-          background-color: #1e40af;
+          background-color: #3b82f6;
           color: #ffffff;
           transform: translateY(-2px);
         }
 
         .projects-section {
-          background-color: #f8fafc;
+          background-color: transparent;
           padding: 60px 40px;
           display: flex;
           align-items: center;
@@ -187,8 +254,8 @@ export default function Home() {
         }
 
         .project-card {
-          background-color: #ffffff;
-          border: none;
+          background-color: rgba(30, 41, 59, 0.8);
+          border: 1px solid rgba(71, 85, 105, 0.3);
           border-radius: 12px;
           padding: 20px 20px 8px 20px;
           text-align: left;
@@ -198,8 +265,9 @@ export default function Home() {
           flex-direction: column;
           gap: 8px;
           min-height: 160px;
-          width: 100%;
-          box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
+          width: 110%;
+          box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+          backdrop-filter: blur(10px);
         }
 
 
@@ -218,26 +286,26 @@ export default function Home() {
           font-size: 18px;
           font-weight: 600;
           margin: 0;
-          color: #1e293b;
+          color: #f8fafc;
           line-height: 1.3;
         }
 
         .project-revenue {
           font-size: 16px;
           font-weight: 500;
-          color: #1e40af;
+          color: #60a5fa;
           margin: 2px 0 4px 0;
         }
 
         .project-description {
           font-size: 14px;
-          color: #64748b;
+          color: #cbd5e1;
           line-height: 1.4;
           margin: 0;
         }
 
         .right-section {
-          background-color: #f8fafc;
+          background-color: transparent;
           padding: 40px;
           display: flex;
           align-items: center;
@@ -316,6 +384,33 @@ export default function Home() {
           }
         }
       `}</style>
+      
+      <script dangerouslySetInnerHTML={{
+        __html: `
+          function createPixels() {
+            const pixelBg = document.getElementById('pixel-bg');
+            if (!pixelBg) return;
+            
+            pixelBg.innerHTML = '';
+            
+            const pixelCount = Math.floor(window.innerWidth * window.innerHeight / 8000);
+            
+            for (let i = 0; i < pixelCount; i++) {
+              const pixel = document.createElement('div');
+              pixel.className = 'pixel';
+              pixel.style.left = Math.random() * 100 + '%';
+              pixel.style.top = Math.random() * 100 + '%';
+              pixel.style.animationDelay = (Math.random() * 3) + 's';
+              pixelBg.appendChild(pixel);
+            }
+          }
+          
+          if (typeof window !== 'undefined') {
+            createPixels();
+            window.addEventListener('resize', createPixels);
+          }
+        `
+      }} />
     </>
   );
 }
