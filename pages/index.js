@@ -277,9 +277,9 @@ export default function Home() {
           /* Pure glass effect - no solid background */
           background: transparent;
           
-          /* Ultra realistic blur */
-          backdrop-filter: blur(40px) saturate(150%);
-          -webkit-backdrop-filter: blur(40px) saturate(150%);
+          /* Light blur to show more background */
+          backdrop-filter: blur(15px) saturate(120%);
+          -webkit-backdrop-filter: blur(15px) saturate(120%);
           
           /* Glass border with subtle highlight */
           border: 1px solid rgba(255, 255, 255, 0.1);
