@@ -16,7 +16,8 @@
       "WebFetch(domain:github.com)",
       "Bash(git log:*)",
       "Bash(gh repo edit:*)",
-      "Bash(git remote remove:*)"
+      "Bash(git remote remove:*)",
+      "WebFetch(domain:www.netlify.com)"
     ],
     "deny": [],
     "ask": []

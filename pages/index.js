@@ -229,6 +229,23 @@ export default function Home() {
           overflow-x: hidden;
         }
 
+        body::after {
+          content: '';
+          position: fixed;
+          bottom: 0;
+          left: 0;
+          right: 0;
+          height: 200px;
+          background: linear-gradient(to top, 
+            rgba(49, 99, 223, 0.4) 0%, 
+            rgba(49, 99, 223, 0.2) 30%, 
+            rgba(49, 99, 223, 0.1) 60%, 
+            transparent 100%);
+          pointer-events: none;
+          z-index: 1;
+          filter: blur(2px);
+        }
+
         .pixel-bg {
           position: fixed;
           top: 0;
