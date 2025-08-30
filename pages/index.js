@@ -463,9 +463,8 @@ export default function Home() {
           display: flex;
           flex-direction: column;
           gap: 8px;
-          min-height: 160px;
-          width: 100%;
-          max-width: 400px;
+          height: 160px;
+          width: 400px;
           box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
           backdrop-filter: blur(10px);
         }
