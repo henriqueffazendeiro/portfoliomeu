@@ -100,20 +100,6 @@ export default function Home() {
           overflow-x: hidden;
         }
 
-        body::before {
-          content: '';
-          position: fixed;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          background: 
-            radial-gradient(circle at 20% 50%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
-            radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
-            radial-gradient(circle at 40% 80%, rgba(120, 119, 198, 0.2) 0%, transparent 50%);
-          z-index: 0;
-        }
-
         .pixel-bg {
           position: fixed;
           top: 0;
@@ -122,30 +108,42 @@ export default function Home() {
           height: 100%;
           pointer-events: none;
           z-index: 1;
+          background-image: 
+            repeating-linear-gradient(
+              0deg,
+              transparent,
+              transparent 19px,
+              rgba(71, 85, 105, 0.1) 20px
+            ),
+            repeating-linear-gradient(
+              90deg,
+              transparent,
+              transparent 19px,
+              rgba(71, 85, 105, 0.1) 20px
+            );
         }
 
         .pixel {
           position: absolute;
-          width: 2px;
-          height: 2px;
-          background-color: rgba(148, 163, 184, 0.4);
-          border-radius: 50%;
-          animation: shimmer 3s ease-in-out infinite;
-        }
-
-        .pixel:nth-child(2n) {
-          animation-delay: -1s;
-          background-color: rgba(203, 213, 225, 0.3);
-        }
-
-        .pixel:nth-child(3n) {
-          animation-delay: -2s;
-          background-color: rgba(241, 245, 249, 0.2);
+          width: 8px;
+          height: 8px;
+          background-color: rgba(148, 163, 184, 0.2);
+          animation: shimmer 4s ease-in-out infinite;
         }
 
         .pixel:nth-child(4n) {
-          animation-delay: -0.5s;
-          background-color: rgba(100, 116, 139, 0.4);
+          background-color: rgba(203, 213, 225, 0.15);
+          animation-delay: -1s;
+        }
+
+        .pixel:nth-child(8n) {
+          background-color: rgba(241, 245, 249, 0.1);
+          animation-delay: -2s;
+        }
+
+        .pixel:nth-child(12n) {
+          background-color: rgba(100, 116, 139, 0.25);
+          animation-delay: -3s;
         }
 
         .container {
@@ -387,27 +385,34 @@ export default function Home() {
       
       <script dangerouslySetInnerHTML={{
         __html: `
-          function createPixels() {
+          function createPixelGrid() {
             const pixelBg = document.getElementById('pixel-bg');
             if (!pixelBg) return;
             
             pixelBg.innerHTML = '';
             
-            const pixelCount = Math.floor(window.innerWidth * window.innerHeight / 8000);
+            const pixelSize = 20; // Tamanho de cada "pixel" em px
+            const cols = Math.ceil(window.innerWidth / pixelSize);
+            const rows = Math.ceil(window.innerHeight / pixelSize);
             
-            for (let i = 0; i < pixelCount; i++) {
-              const pixel = document.createElement('div');
-              pixel.className = 'pixel';
-              pixel.style.left = Math.random() * 100 + '%';
-              pixel.style.top = Math.random() * 100 + '%';
-              pixel.style.animationDelay = (Math.random() * 3) + 's';
-              pixelBg.appendChild(pixel);
+            for (let row = 0; row < rows; row++) {
+              for (let col = 0; col < cols; col++) {
+                // Só criar pixel em algumas posições para efeito espaçado
+                if (Math.random() < 0.15) { // 15% de chance de ter um pixel
+                  const pixel = document.createElement('div');
+                  pixel.className = 'pixel';
+                  pixel.style.left = (col * pixelSize) + 'px';
+                  pixel.style.top = (row * pixelSize) + 'px';
+                  pixel.style.animationDelay = (Math.random() * 4) + 's';
+                  pixelBg.appendChild(pixel);
+                }
+              }
             }
           }
           
           if (typeof window !== 'undefined') {
-            createPixels();
-            window.addEventListener('resize', createPixels);
+            createPixelGrid();
+            window.addEventListener('resize', createPixelGrid);
           }
         `
       }} />
