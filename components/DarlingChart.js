@@ -347,7 +347,7 @@ export default function DarlingChart() {
           transition: all 0.3s ease;
           cursor: pointer;
           min-height: 160px;
-          width: 110%;
+          width: 100%;
           box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
           backdrop-filter: blur(10px);
         }
