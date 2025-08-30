@@ -255,7 +255,7 @@ export default function Home() {
           overflow: hidden;
           position: relative;
           z-index: 2;
-          max-width: 1250px;
+          max-width: 1400px;
           margin: 0 auto;
         }
 
