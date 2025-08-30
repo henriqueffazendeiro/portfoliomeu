@@ -4,18 +4,6 @@ import { useEffect } from 'react';
 
 export default function Home() {
   useEffect(() => {
-    // Load Twitter widgets after component mounts
-    const loadTwitterWidget = () => {
-      if (window.twttr && window.twttr.widgets) {
-        window.twttr.widgets.load();
-      } else {
-        // If Twitter script hasn't loaded yet, wait and try again
-        setTimeout(loadTwitterWidget, 1000);
-      }
-    };
-    
-    loadTwitterWidget();
-
     const canvas = document.getElementById('pixelCanvas');
     if (!canvas) return;
     
@@ -182,7 +170,6 @@ export default function Home() {
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="true" />
         <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
-        <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
       </Head>
 
       <div className="pixel-bg">
@@ -247,14 +234,18 @@ export default function Home() {
 
         <div className="right-section">
           <div className="twitter-container">
-            <a 
-              className="twitter-timeline" 
-              data-theme="dark"
-              data-chrome="transparent nofooter noborders"
-              href="https://twitter.com/f_azendeiro?ref_src=twsrc%5Etfw"
-            >
-              Tweets by f_azendeiro
-            </a>
+            <iframe
+              src="https://twitframe.com/show?url=https://twitter.com/f_azendeiro"
+              frameBorder="0"
+              width="100%"
+              height="100%"
+              style={{
+                border: 'none',
+                borderRadius: '12px',
+                background: 'rgba(30, 41, 59, 0.8)',
+                backdropFilter: 'blur(10px)'
+              }}
+            ></iframe>
           </div>
         </div>
       </div>
