@@ -233,7 +233,10 @@ export default function Home() {
         </div>
 
         <div className="right-section">
-          {/* Space to add content in right column */}
+          <div className="twitter-container">
+            <a className="twitter-timeline" href="https://twitter.com/f_azendeiro?ref_src=twsrc%5Etfw">Tweets by f_azendeiro</a>
+            <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+          </div>
         </div>
       </div>
 
@@ -551,6 +554,12 @@ export default function Home() {
           align-items: center;
           justify-content: center;
           height: 100vh;
+        }
+
+        .twitter-container {
+          width: 100%;
+          max-width: 350px;
+          height: 600px;
         }
 
         @media (max-width: 1024px) {
