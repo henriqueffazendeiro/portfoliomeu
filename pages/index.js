@@ -113,36 +113,36 @@ export default function Home() {
               0deg,
               transparent,
               transparent 19px,
-              rgba(71, 85, 105, 0.1) 20px
+              #0f172a 20px
             ),
             repeating-linear-gradient(
               90deg,
               transparent,
               transparent 19px,
-              rgba(71, 85, 105, 0.1) 20px
+              #0f172a 20px
             );
         }
 
         .pixel {
           position: absolute;
-          width: 8px;
-          height: 8px;
-          background-color: rgba(148, 163, 184, 0.2);
+          width: 3px;
+          height: 3px;
+          background-color: rgba(148, 163, 184, 0.4);
           animation: shimmer 4s ease-in-out infinite;
         }
 
         .pixel:nth-child(4n) {
-          background-color: rgba(203, 213, 225, 0.15);
+          background-color: rgba(203, 213, 225, 0.3);
           animation-delay: -1s;
         }
 
         .pixel:nth-child(8n) {
-          background-color: rgba(241, 245, 249, 0.1);
+          background-color: rgba(241, 245, 249, 0.2);
           animation-delay: -2s;
         }
 
         .pixel:nth-child(12n) {
-          background-color: rgba(100, 116, 139, 0.25);
+          background-color: rgba(100, 116, 139, 0.5);
           animation-delay: -3s;
         }
 
@@ -392,20 +392,19 @@ export default function Home() {
             pixelBg.innerHTML = '';
             
             const pixelSize = 20; // Tamanho de cada "pixel" em px
-            const cols = Math.ceil(window.innerWidth / pixelSize);
-            const rows = Math.ceil(window.innerHeight / pixelSize);
+            const cols = Math.ceil(window.innerWidth / pixelSize) + 1;
+            const rows = Math.ceil(window.innerHeight / pixelSize) + 1;
             
+            // Criar mini quadrados em CADA vértice (interseção das linhas)
             for (let row = 0; row < rows; row++) {
               for (let col = 0; col < cols; col++) {
-                // Só criar pixel em algumas posições para efeito espaçado
-                if (Math.random() < 0.15) { // 15% de chance de ter um pixel
-                  const pixel = document.createElement('div');
-                  pixel.className = 'pixel';
-                  pixel.style.left = (col * pixelSize) + 'px';
-                  pixel.style.top = (row * pixelSize) + 'px';
-                  pixel.style.animationDelay = (Math.random() * 4) + 's';
-                  pixelBg.appendChild(pixel);
-                }
+                const pixel = document.createElement('div');
+                pixel.className = 'pixel';
+                // Posicionar exatamente no vértice (menos metade do tamanho para centralizar)
+                pixel.style.left = (col * pixelSize - 1.5) + 'px';
+                pixel.style.top = (row * pixelSize - 1.5) + 'px';
+                pixel.style.animationDelay = ((row + col) * 0.1) + 's'; // Delay baseado na posição
+                pixelBg.appendChild(pixel);
               }
             }
           }
