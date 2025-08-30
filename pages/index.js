@@ -234,18 +234,16 @@ export default function Home() {
 
         <div className="right-section">
           <div className="twitter-container">
-            <iframe
-              src="https://twitframe.com/show?url=https://twitter.com/f_azendeiro"
-              frameBorder="0"
-              width="100%"
-              height="100%"
-              style={{
-                border: 'none',
-                borderRadius: '12px',
-                background: 'rgba(30, 41, 59, 0.8)',
-                backdropFilter: 'blur(10px)'
-              }}
-            ></iframe>
+            <div className="twitter-embed-container">
+              <h3>Latest Tweets</h3>
+              <p>@f_azendeiro</p>
+              <div className="tweet-placeholder">
+                <p>Twitter feed will load here</p>
+                <a href="https://twitter.com/f_azendeiro" target="_blank" rel="noopener noreferrer">
+                  Follow on Twitter
+                </a>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -570,6 +568,55 @@ export default function Home() {
           width: 100%;
           max-width: 350px;
           height: 600px;
+        }
+
+        .twitter-embed-container {
+          background: rgba(30, 41, 59, 0.8);
+          border: 1px solid rgba(71, 85, 105, 0.3);
+          border-radius: 12px;
+          padding: 20px;
+          height: 100%;
+          backdrop-filter: blur(10px);
+          color: #f8fafc;
+        }
+
+        .twitter-embed-container h3 {
+          margin: 0 0 8px 0;
+          font-size: 18px;
+          font-weight: 600;
+          color: #f8fafc;
+        }
+
+        .twitter-embed-container p {
+          margin: 0 0 20px 0;
+          color: #60a5fa;
+          font-weight: 500;
+        }
+
+        .tweet-placeholder {
+          text-align: center;
+          padding: 40px 20px;
+          color: #cbd5e1;
+        }
+
+        .tweet-placeholder p {
+          margin-bottom: 20px;
+          color: #cbd5e1;
+        }
+
+        .tweet-placeholder a {
+          display: inline-block;
+          padding: 10px 20px;
+          background-color: #1da1f2;
+          color: white;
+          text-decoration: none;
+          border-radius: 20px;
+          font-weight: 500;
+          transition: background-color 0.2s ease;
+        }
+
+        .tweet-placeholder a:hover {
+          background-color: #0d8bd9;
         }
 
         @media (max-width: 1024px) {
