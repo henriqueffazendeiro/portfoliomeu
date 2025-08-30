@@ -46,18 +46,16 @@ export default function Home() {
           
           // Calculate fade factor based on distance from glow zone
           let fadeFactor = 1;
-          if (pixelY > glowZoneStart - 150) {
-            // Pixels within 150px above glow zone start fading
+          const fadeStartDistance = 300; // Start fading 300px before glow zone
+          
+          if (pixelY > glowZoneStart - fadeStartDistance) {
             if (pixelY <= glowZoneStart) {
-              // Above glow zone - fade based on proximity
+              // Above glow zone - gradual fade over larger distance
               const distanceFromGlow = glowZoneStart - pixelY;
-              const fadeDistance = 150;
-              fadeFactor = Math.min(1, distanceFromGlow / fadeDistance);
+              fadeFactor = Math.pow(distanceFromGlow / fadeStartDistance, 0.5); // More aggressive fade curve
             } else {
-              // Inside glow zone - fade based on depth into glow
-              const depthIntoGlow = pixelY - glowZoneStart;
-              const glowIntensity = depthIntoGlow / glowZoneHeight;
-              fadeFactor = Math.max(0.02, 1 - glowIntensity * 0.95); // Minimum 2% visibility
+              // Inside glow zone - completely invisible
+              fadeFactor = 0;
             }
           }
           
