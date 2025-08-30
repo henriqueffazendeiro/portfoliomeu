@@ -10,7 +10,7 @@ export default function Home() {
       
       pixelBg.innerHTML = '';
       
-      const pixelSize = 30;
+      const pixelSize = 15; // Reduzir espaçamento para mais quadrados
       const cols = Math.ceil(window.innerWidth / pixelSize) + 1;
       const rows = Math.ceil(window.innerHeight / pixelSize) + 1;
       
@@ -18,9 +18,9 @@ export default function Home() {
         for (let col = 0; col < cols; col++) {
           const pixel = document.createElement('div');
           pixel.className = 'pixel';
-          pixel.style.left = (col * pixelSize - 2) + 'px';
-          pixel.style.top = (row * pixelSize - 2) + 'px';
-          pixel.style.animationDelay = ((row + col) * 0.05) + 's';
+          pixel.style.left = (col * pixelSize - 1) + 'px';
+          pixel.style.top = (row * pixelSize - 1) + 'px';
+          // Remover efeito de onda - sem animationDelay baseado em posição
           pixel.style.zIndex = '10';
           pixelBg.appendChild(pixel);
         }
@@ -150,10 +150,10 @@ export default function Home() {
 
         .pixel {
           position: absolute;
-          width: 4px;
-          height: 4px;
-          background-color: rgba(148, 163, 184, 0.8);
-          border-radius: 1px;
+          width: 2px;
+          height: 2px;
+          background-color: rgba(148, 163, 184, 0.6);
+          border-radius: 0.5px;
           animation: shimmer 4s ease-in-out infinite;
         }
 
