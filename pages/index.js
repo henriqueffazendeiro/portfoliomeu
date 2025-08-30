@@ -4,6 +4,11 @@ import { useEffect } from 'react';
 
 export default function Home() {
   useEffect(() => {
+    // Load Twitter widgets
+    if (window.twttr && window.twttr.widgets) {
+      window.twttr.widgets.load();
+    }
+
     const canvas = document.getElementById('pixelCanvas');
     if (!canvas) return;
     
@@ -170,6 +175,7 @@ export default function Home() {
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="true" />
         <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+        <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
       </Head>
 
       <div className="pixel-bg">
@@ -234,8 +240,14 @@ export default function Home() {
 
         <div className="right-section">
           <div className="twitter-container">
-            <a className="twitter-timeline" href="https://twitter.com/f_azendeiro?ref_src=twsrc%5Etfw">Tweets by f_azendeiro</a>
-            <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+            <a 
+              className="twitter-timeline" 
+              data-theme="dark"
+              data-chrome="transparent nofooter noborders"
+              href="https://twitter.com/f_azendeiro?ref_src=twsrc%5Etfw"
+            >
+              Tweets by f_azendeiro
+            </a>
           </div>
         </div>
       </div>
