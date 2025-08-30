@@ -98,7 +98,7 @@ export default function Home() {
         for (let i = 0; i < toDeactivate && i < activePixels.length; i++) {
           const randomPixel = activePixels[Math.floor(Math.random() * activePixels.length)];
           randomPixel.isActive = false;
-          randomPixel.targetOpacity = 0.02;
+          randomPixel.targetOpacity = 0.04;
         }
       }
       
@@ -107,7 +107,7 @@ export default function Home() {
           pixel.hasEntered = true;
           pixel.targetOpacity = 0.6 + Math.random() * 0.4;
           setTimeout(() => {
-            pixel.targetOpacity = 0.02;
+            pixel.targetOpacity = 0.04;
           }, 30 + Math.random() * 70);
         }
         
@@ -128,7 +128,7 @@ export default function Home() {
             }
           } else if (pixel.hasEntered) {
             // Draw dim pixels when not active
-            ctx.fillStyle = `rgba(49, 99, 223, 0.02)`;
+            ctx.fillStyle = `rgba(49, 99, 223, 0.04)`;
             ctx.fillRect(pixel.x, pixel.y, PIXEL_SIZE, PIXEL_SIZE);
           }
         }
