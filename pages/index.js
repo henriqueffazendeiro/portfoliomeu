@@ -446,7 +446,7 @@ export default function Home() {
           gap: 20px;
           width: 100%;
           margin: 0 auto;
-          padding: 0 20px;
+          padding: 0;
           align-items: center;
           justify-content: center;
         }
