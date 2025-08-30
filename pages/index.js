@@ -250,16 +250,18 @@ export default function Home() {
         .container {
           height: 100vh;
           display: grid;
-          grid-template-columns: 1fr 2fr 1fr;
+          grid-template-columns: 1fr 1fr 1fr;
           gap: 0;
           overflow: hidden;
           position: relative;
           z-index: 2;
+          max-width: 1250px;
+          margin: 0 auto;
         }
 
         .profile-section {
           background-color: transparent;
-          padding: 20px;
+          padding: 40px;
           display: flex;
           align-items: center;
           justify-content: center;
@@ -431,7 +433,7 @@ export default function Home() {
 
         .projects-section {
           background-color: transparent;
-          padding: 40px 20px;
+          padding: 60px 40px;
           display: flex;
           align-items: center;
           justify-content: center;
@@ -504,7 +506,7 @@ export default function Home() {
 
         .right-section {
           background-color: transparent;
-          padding: 20px;
+          padding: 40px;
           display: flex;
           align-items: center;
           justify-content: center;
