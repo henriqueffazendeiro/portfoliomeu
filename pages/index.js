@@ -1,7 +1,45 @@
 import Head from 'next/head';
 import DarlingChart from '../components/DarlingChart';
+import { useEffect } from 'react';
 
 export default function Home() {
+  useEffect(() => {
+    const createPixelGrid = () => {
+      const pixelBg = document.getElementById('pixel-bg');
+      if (!pixelBg) return;
+      
+      pixelBg.innerHTML = '';
+      
+      const pixelSize = 30;
+      const cols = Math.ceil(window.innerWidth / pixelSize) + 1;
+      const rows = Math.ceil(window.innerHeight / pixelSize) + 1;
+      
+      for (let row = 0; row < rows; row++) {
+        for (let col = 0; col < cols; col++) {
+          const pixel = document.createElement('div');
+          pixel.className = 'pixel';
+          pixel.style.left = (col * pixelSize - 2) + 'px';
+          pixel.style.top = (row * pixelSize - 2) + 'px';
+          pixel.style.animationDelay = ((row + col) * 0.05) + 's';
+          pixel.style.zIndex = '10';
+          pixelBg.appendChild(pixel);
+        }
+      }
+    };
+
+    // Criar pixels quando o componente montar
+    createPixelGrid();
+
+    // Recriar quando a janela redimensionar
+    const handleResize = () => createPixelGrid();
+    window.addEventListener('resize', handleResize);
+
+    // Cleanup
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
   return (
     <>
       <Head>
@@ -367,40 +405,6 @@ export default function Home() {
           }
         }
       `}</style>
-      
-      <script dangerouslySetInnerHTML={{
-        __html: `
-          function createPixelGrid() {
-            const pixelBg = document.getElementById('pixel-bg');
-            if (!pixelBg) return;
-            
-            pixelBg.innerHTML = '';
-            
-            const pixelSize = 30; // Aumentar espaçamento para melhor visibilidade
-            const cols = Math.ceil(window.innerWidth / pixelSize) + 1;
-            const rows = Math.ceil(window.innerHeight / pixelSize) + 1;
-            
-            // Criar mini quadrados em CADA vértice (interseção das linhas)
-            for (let row = 0; row < rows; row++) {
-              for (let col = 0; col < cols; col++) {
-                const pixel = document.createElement('div');
-                pixel.className = 'pixel';
-                // Posicionar exatamente no vértice (menos metade do tamanho para centralizar)
-                pixel.style.left = (col * pixelSize - 2) + 'px';
-                pixel.style.top = (row * pixelSize - 2) + 'px';
-                pixel.style.animationDelay = ((row + col) * 0.05) + 's'; // Delay mais rápido
-                pixel.style.zIndex = '10'; // Garantir que apareça por cima
-                pixelBg.appendChild(pixel);
-              }
-            }
-          }
-          
-          if (typeof window !== 'undefined') {
-            createPixelGrid();
-            window.addEventListener('resize', createPixelGrid);
-          }
-        `
-      }} />
     </>
   );
 }
