@@ -4,42 +4,136 @@ import { useEffect } from 'react';
 
 export default function Home() {
   useEffect(() => {
-    const createPixelGrid = () => {
-      const pixelBg = document.getElementById('pixel-bg');
-      if (!pixelBg) return;
+    const canvas = document.getElementById('pixelCanvas');
+    if (!canvas) return;
+    
+    const ctx = canvas.getContext('2d');
+    let width, height;
+    let pixels = [];
+    let animationStartTime = Date.now();
+    let animationId;
+    
+    // Configurações
+    const PIXEL_SIZE = 2;
+    const GRID_GAP = 8;
+    const CELL_SIZE = PIXEL_SIZE + GRID_GAP;
+    
+    function resize() {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+      initPixels();
+    }
+    
+    function initPixels() {
+      pixels = [];
+      const cols = Math.ceil(width / CELL_SIZE);
+      const rows = Math.ceil(height / CELL_SIZE);
       
-      pixelBg.innerHTML = '';
+      const centerX = width / 2;
+      const centerY = height / 2;
+      const maxDistance = Math.hypot(centerX, centerY);
       
-      const pixelSize = 15; // Reduzir espaçamento para mais quadrados
-      const cols = Math.ceil(window.innerWidth / pixelSize) + 1;
-      const rows = Math.ceil(window.innerHeight / pixelSize) + 1;
-      
-      for (let row = 0; row < rows; row++) {
-        for (let col = 0; col < cols; col++) {
-          const pixel = document.createElement('div');
-          pixel.className = 'pixel';
-          pixel.style.left = (col * pixelSize - 1) + 'px';
-          pixel.style.top = (row * pixelSize - 1) + 'px';
-          // Timing aleatório muito espaçado (0 a 20 segundos de delay)
-          pixel.style.animationDelay = (Math.random() * 20) + 's';
-          // Duração mais longa para menos caos (12 a 18 segundos)
-          pixel.style.animationDuration = (12 + Math.random() * 6) + 's';
-          pixel.style.zIndex = '10';
-          pixelBg.appendChild(pixel);
+      for (let x = 0; x < cols; x++) {
+        for (let y = 0; y < rows; y++) {
+          const pixelX = x * CELL_SIZE;
+          const pixelY = y * CELL_SIZE;
+          const distanceFromCenter = Math.hypot(pixelX - centerX, pixelY - centerY);
+          
+          pixels.push({
+            x: pixelX,
+            y: pixelY,
+            opacity: 0,
+            targetOpacity: 0,
+            isActive: false,
+            speed: 0.02 + Math.random() * 0.03,
+            entryDelay: (distanceFromCenter / maxDistance) * 1000,
+            hasEntered: false,
+            timeOffset: Math.random() * Math.PI * 2
+          });
         }
       }
-    };
-
-    // Criar pixels quando o componente montar
-    createPixelGrid();
-
-    // Recriar quando a janela redimensionar
-    const handleResize = () => createPixelGrid();
+      
+      animationStartTime = Date.now();
+    }
+    
+    const MIN_ACTIVE_PIXELS = 15;
+    const MAX_ACTIVE_PIXELS = 40;
+    let targetActivePixels = MIN_ACTIVE_PIXELS + Math.random() * (MAX_ACTIVE_PIXELS - MIN_ACTIVE_PIXELS);
+    
+    function animate() {
+      ctx.clearRect(0, 0, width, height);
+      
+      const currentTime = Date.now();
+      const timeSinceStart = currentTime - animationStartTime;
+      
+      let activeCount = pixels.filter(p => p.isActive).length;
+      
+      if (Math.random() < 0.005) {
+        targetActivePixels = MIN_ACTIVE_PIXELS + Math.random() * (MAX_ACTIVE_PIXELS - MIN_ACTIVE_PIXELS);
+      }
+      
+      if (activeCount < targetActivePixels) {
+        const inactivePixels = pixels.filter(p => !p.isActive && p.hasEntered);
+        if (inactivePixels.length > 0) {
+          const toActivate = Math.min(2, targetActivePixels - activeCount);
+          for (let i = 0; i < toActivate && i < inactivePixels.length; i++) {
+            const randomPixel = inactivePixels[Math.floor(Math.random() * inactivePixels.length)];
+            randomPixel.isActive = true;
+            randomPixel.targetOpacity = 0.4 + Math.random() * 0.6;
+          }
+        }
+      } else if (activeCount > targetActivePixels) {
+        const activePixels = pixels.filter(p => p.isActive);
+        const toDeactivate = Math.min(2, activeCount - targetActivePixels);
+        for (let i = 0; i < toDeactivate && i < activePixels.length; i++) {
+          const randomPixel = activePixels[Math.floor(Math.random() * activePixels.length)];
+          randomPixel.isActive = false;
+          randomPixel.targetOpacity = 0;
+        }
+      }
+      
+      pixels.forEach(pixel => {
+        if (!pixel.hasEntered && timeSinceStart > pixel.entryDelay) {
+          pixel.hasEntered = true;
+          pixel.targetOpacity = 0.6 + Math.random() * 0.4;
+          setTimeout(() => {
+            pixel.targetOpacity = 0;
+          }, 30 + Math.random() * 70);
+        }
+        
+        if (pixel.hasEntered) {
+          pixel.opacity += (pixel.targetOpacity - pixel.opacity) * 0.1;
+          
+          if (pixel.opacity > 0.01) {
+            const intensity = pixel.opacity;
+            ctx.fillStyle = `rgba(49, 99, 223, ${intensity})`;
+            
+            ctx.fillRect(pixel.x, pixel.y, PIXEL_SIZE, PIXEL_SIZE);
+            
+            if (pixel.opacity > 0.5) {
+              ctx.shadowBlur = 4;
+              ctx.shadowColor = `rgba(49, 99, 223, ${intensity * 0.5})`;
+              ctx.fillRect(pixel.x, pixel.y, PIXEL_SIZE, PIXEL_SIZE);
+              ctx.shadowBlur = 0;
+            }
+          }
+        }
+      });
+      
+      animationId = requestAnimationFrame(animate);
+    }
+    
+    resize();
+    animate();
+    
+    const handleResize = () => resize();
     window.addEventListener('resize', handleResize);
-
-    // Cleanup
+    
     return () => {
       window.removeEventListener('resize', handleResize);
+      if (animationId) {
+        cancelAnimationFrame(animationId);
+      }
     };
   }, []);
 
@@ -53,7 +147,9 @@ export default function Home() {
         <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
       </Head>
 
-      <div className="pixel-bg" id="pixel-bg"></div>
+      <div className="pixel-bg">
+        <canvas id="pixelCanvas"></canvas>
+      </div>
       
       <div className="container">
         <div className="profile-section">
@@ -121,23 +217,6 @@ export default function Home() {
           box-sizing: border-box;
         }
 
-        @keyframes pixelFlash {
-          0%, 97%, 100% {
-            background-color: rgba(148, 163, 184, 0.6);
-            box-shadow: none;
-            transform: scale(1);
-          }
-          10% {
-            background-color: #3163df;
-            box-shadow: 0 0 8px #3163df, 0 0 16px #3163df;
-            transform: scale(1.3);
-          }
-          90% {
-            background-color: #3163df;
-            box-shadow: 0 0 8px #3163df, 0 0 16px #3163df;
-            transform: scale(1.3);
-          }
-        }
 
         body {
           font-family: 'Rubik', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
@@ -158,14 +237,12 @@ export default function Home() {
           z-index: 1;
         }
 
-        .pixel {
+        #pixelCanvas {
           position: absolute;
-          width: 2px;
-          height: 2px;
-          background-color: rgba(148, 163, 184, 0.6);
-          border-radius: 0.5px;
-          animation: pixelFlash 15s ease-in-out infinite;
-          transition: all 1s ease;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
         }
 
         .container {
