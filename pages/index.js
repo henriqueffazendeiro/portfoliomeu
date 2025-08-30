@@ -274,26 +274,15 @@ export default function Home() {
           border-radius: 24px;
           overflow: hidden;
           
-          /* Multi-layer glass effect */
-          background: 
-            linear-gradient(135deg, 
-              rgba(255, 255, 255, 0.01) 0%, 
-              rgba(255, 255, 255, 0.05) 50%, 
-              rgba(255, 255, 255, 0.01) 100%),
-            linear-gradient(to bottom, 
-              rgba(255, 255, 255, 0.03) 0%, 
-              transparent 20%, 
-              transparent 80%, 
-              rgba(255, 255, 255, 0.03) 100%),
-            rgba(255, 255, 255, 0.02);
+          /* Pure glass effect - no solid background */
+          background: transparent;
           
           /* Ultra realistic blur */
           backdrop-filter: blur(40px) saturate(150%);
           -webkit-backdrop-filter: blur(40px) saturate(150%);
           
-          /* Complex border for glass edge effect */
-          border: 1px solid transparent;
-          background-clip: padding-box;
+          /* Glass border with subtle highlight */
+          border: 1px solid rgba(255, 255, 255, 0.1);
           
           /* Realistic glass shadows and lighting */
           box-shadow: 
