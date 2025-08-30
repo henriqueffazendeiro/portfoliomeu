@@ -54,8 +54,10 @@ export default function Home() {
               const distanceFromGlow = glowZoneStart - pixelY;
               fadeFactor = Math.pow(distanceFromGlow / fadeStartDistance, 0.5); // More aggressive fade curve
             } else {
-              // Inside glow zone - completely invisible
-              fadeFactor = 0;
+              // Inside glow zone - fade to completely invisible only at the very bottom
+              const depthIntoGlow = pixelY - glowZoneStart;
+              const fadeProgress = depthIntoGlow / glowZoneHeight;
+              fadeFactor = Math.max(0, 1 - fadeProgress * 1.2); // Completely invisible only near bottom
             }
           }
           
