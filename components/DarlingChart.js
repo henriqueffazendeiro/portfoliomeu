@@ -381,7 +381,7 @@ export default function DarlingChart() {
         }
 
         .darling-revenue {
-          background: linear-gradient(to right, #635bff 25%, #e2e8f0 25%);
+          background: #061622;
           border-radius: 10px;
           padding: 0;
           display: flex;
