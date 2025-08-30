@@ -33,10 +33,20 @@ export default function Home() {
       const centerY = height / 2;
       const maxDistance = Math.hypot(centerX, centerY);
       
+      // Calculate the glow zone height (200px from bottom)
+      const glowZoneHeight = 200;
+      const glowZoneStart = height - glowZoneHeight;
+      
       for (let x = 0; x < cols; x++) {
         for (let y = 0; y < rows; y++) {
           const pixelX = x * CELL_SIZE;
           const pixelY = y * CELL_SIZE;
+          
+          // Skip pixels that are in the bottom glow zone
+          if (pixelY > glowZoneStart) {
+            continue;
+          }
+          
           const distanceFromCenter = Math.hypot(pixelX - centerX, pixelY - centerY);
           
           pixels.push({
