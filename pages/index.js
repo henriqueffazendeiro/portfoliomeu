@@ -108,42 +108,27 @@ export default function Home() {
           height: 100%;
           pointer-events: none;
           z-index: 1;
-          background-image: 
-            repeating-linear-gradient(
-              0deg,
-              transparent,
-              transparent 19px,
-              #0f172a 20px
-            ),
-            repeating-linear-gradient(
-              90deg,
-              transparent,
-              transparent 19px,
-              #0f172a 20px
-            );
         }
 
         .pixel {
           position: absolute;
-          width: 3px;
-          height: 3px;
-          background-color: rgba(148, 163, 184, 0.4);
+          width: 4px;
+          height: 4px;
+          background-color: rgba(148, 163, 184, 0.8);
+          border-radius: 1px;
           animation: shimmer 4s ease-in-out infinite;
         }
 
         .pixel:nth-child(4n) {
-          background-color: rgba(203, 213, 225, 0.3);
-          animation-delay: -1s;
+          background-color: rgba(203, 213, 225, 0.7);
         }
 
         .pixel:nth-child(8n) {
-          background-color: rgba(241, 245, 249, 0.2);
-          animation-delay: -2s;
+          background-color: rgba(241, 245, 249, 0.6);
         }
 
         .pixel:nth-child(12n) {
-          background-color: rgba(100, 116, 139, 0.5);
-          animation-delay: -3s;
+          background-color: rgba(100, 116, 139, 0.9);
         }
 
         .container {
@@ -391,7 +376,7 @@ export default function Home() {
             
             pixelBg.innerHTML = '';
             
-            const pixelSize = 20; // Tamanho de cada "pixel" em px
+            const pixelSize = 30; // Aumentar espaçamento para melhor visibilidade
             const cols = Math.ceil(window.innerWidth / pixelSize) + 1;
             const rows = Math.ceil(window.innerHeight / pixelSize) + 1;
             
@@ -401,9 +386,10 @@ export default function Home() {
                 const pixel = document.createElement('div');
                 pixel.className = 'pixel';
                 // Posicionar exatamente no vértice (menos metade do tamanho para centralizar)
-                pixel.style.left = (col * pixelSize - 1.5) + 'px';
-                pixel.style.top = (row * pixelSize - 1.5) + 'px';
-                pixel.style.animationDelay = ((row + col) * 0.1) + 's'; // Delay baseado na posição
+                pixel.style.left = (col * pixelSize - 2) + 'px';
+                pixel.style.top = (row * pixelSize - 2) + 'px';
+                pixel.style.animationDelay = ((row + col) * 0.05) + 's'; // Delay mais rápido
+                pixel.style.zIndex = '10'; // Garantir que apareça por cima
                 pixelBg.appendChild(pixel);
               }
             }
